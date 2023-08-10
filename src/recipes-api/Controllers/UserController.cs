@@ -12,39 +12,74 @@ namespace recipes_api.Controllers;
 [ApiController]
 [Route("user")]
 public class UserController : ControllerBase
-{    
+{
     public readonly IUserService _service;
-    
+
     public UserController(IUserService service)
     {
-        this._service = service;        
+        this._service = service;
     }
 
-    // 6 - Sua aplicação deve ter o endpoint GET /user/:email
     [HttpGet("{email}", Name = "GetUser")]
     public IActionResult Get(string email)
-    {                
-        throw new NotImplementedException();
+    {
+        var user = _service.GetUser(email);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(user);
     }
 
-    // 7 - Sua aplicação deve ter o endpoint POST /user
+    
     [HttpPost]
-    public IActionResult Create([FromBody]User user)
+    public IActionResult Create([FromBody] User user)
     {
-        throw new NotImplementedException();
+        if (user == null)
+        {
+            return BadRequest();
+        }
+
+        _service.AddUser(user);
+
+        return Created("", user);
     }
 
-    // "8 - Sua aplicação deve ter o endpoint PUT /user
+    
     [HttpPut("{email}")]
-    public IActionResult Update(string email, [FromBody]User user)
+    public IActionResult Update(string email, [FromBody] User user)
     {
-        throw new NotImplementedException();
+        var userExists = _service.UserExists(email);
+
+        if (userExists)
+        {
+            var userUpdate = _service.GetUser(email);
+
+            if (userUpdate.Email != user.Email)
+            {
+                return BadRequest();
+            }
+            _service.UpdateUser(user);
+            return Ok();
+        }
+
+        return NotFound();
     }
 
-    // 9 - Sua aplicação deve ter o endpoint DEL /user
+    
     [HttpDelete("{email}")]
     public IActionResult Delete(string email)
     {
-        throw new NotImplementedException();
-    } 
+        var emailExists = _service.UserExists(email);
+        if (!emailExists)
+        {
+            return NotFound();
+        }
+
+        _service.DeleteUser(email);
+
+        return NoContent();
+    }
 }
