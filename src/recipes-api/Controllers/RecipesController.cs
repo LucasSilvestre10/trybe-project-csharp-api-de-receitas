@@ -43,7 +43,6 @@ public class RecipesController : ControllerBase
         return Ok(result);
     }
 
-    // 3 - Sua aplicação deve ter o endpoint POST /recipe
     [HttpPost]
     public IActionResult Create([FromBody] Recipe recipe)
     {
@@ -58,7 +57,6 @@ public class RecipesController : ControllerBase
     }
 
 
-    // 4 - Sua aplicação deve ter o endpoint PUT /recipe
     [HttpPut("{name}")]
     public IActionResult Update([FromBody] Recipe recipe)
     {
@@ -76,7 +74,6 @@ public class RecipesController : ControllerBase
 
 
 
-    // 5 - Sua aplicação deve ter o endpoint DEL /recipe
 
     [HttpDelete("{name}")]
     public IActionResult Delete(string name)
